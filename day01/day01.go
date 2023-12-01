@@ -3,7 +3,6 @@ package main
 import (
 	"bufio"
 	"errors"
-	"flag"
 	"fmt"
 	"os"
 	"strconv"
@@ -13,17 +12,14 @@ import (
 )
 
 func main() {
-	var input util.InputFile
-	flag.Var(&input, "input", "input file")
-	flag.Parse()
-
-	p1, err := solve(input.String(), false)
+	input := util.HandleInput()
+	p1, err := solve(input, false)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
 	fmt.Println("Part 1:", p1)
-	p2, err := solve(input.String(), true)
+	p2, err := solve(input, true)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
@@ -31,17 +27,17 @@ func main() {
 	fmt.Println("Part 2:", p2)
 }
 
-func solve(input string, includeText bool) (int, error) {
+func solve(input string, includeSpelled bool) (int, error) {
 	scanner := bufio.NewScanner(strings.NewReader(input))
 	i := 0
 	for scanner.Scan() {
 		t := scanner.Text()
 		var f, l int
 		var err error
-		if f, err = firstDigit(t, includeText); err != nil {
+		if f, err = firstDigit(t, includeSpelled); err != nil {
 			return -1, err
 		}
-		if l, err = lastDigit(t, includeText); err != nil {
+		if l, err = lastDigit(t, includeSpelled); err != nil {
 			return -1, err
 		}
 		i += (f * 10) + l

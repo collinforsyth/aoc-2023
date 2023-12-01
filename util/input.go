@@ -1,6 +1,16 @@
 package util
 
-import "io/ioutil"
+import (
+	"flag"
+	"io/ioutil"
+)
+
+func HandleInput() string {
+	var input InputFile
+	flag.Var(&input, "input", "input file")
+	flag.Parse()
+	return input.String()
+}
 
 // InputFile is a helper flag that automatically parses a
 // file name into the InputFile variable
