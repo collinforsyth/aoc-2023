@@ -17,13 +17,13 @@ func main() {
 	flag.Var(&input, "input", "input file")
 	flag.Parse()
 
-	p1, err := part1(input.String())
+	p1, err := solve(input.String(), false)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
 	fmt.Println("Part 1:", p1)
-	p2, err := part2(input.String())
+	p2, err := solve(input.String(), true)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
@@ -31,35 +31,17 @@ func main() {
 	fmt.Println("Part 2:", p2)
 }
 
-func part1(input string) (int, error) {
+func solve(input string, includeText bool) (int, error) {
 	scanner := bufio.NewScanner(strings.NewReader(input))
 	i := 0
 	for scanner.Scan() {
 		t := scanner.Text()
 		var f, l int
 		var err error
-		if f, err = firstDigit(t, false); err != nil {
+		if f, err = firstDigit(t, includeText); err != nil {
 			return -1, err
 		}
-		if l, err = lastDigit(t, false); err != nil {
-			return -1, err
-		}
-		i += (f * 10) + l
-	}
-	return i, nil
-}
-
-func part2(input string) (int, error) {
-	scanner := bufio.NewScanner(strings.NewReader(input))
-	i := 0
-	for scanner.Scan() {
-		t := scanner.Text()
-		var f, l int
-		var err error
-		if f, err = firstDigit(t, true); err != nil {
-			return -1, err
-		}
-		if l, err = lastDigit(t, true); err != nil {
+		if l, err = lastDigit(t, includeText); err != nil {
 			return -1, err
 		}
 		i += (f * 10) + l
