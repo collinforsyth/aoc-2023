@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"fmt"
 	"math"
-	"slices"
 	"strconv"
 	"strings"
 
@@ -22,7 +21,7 @@ func main() {
 
 type card struct {
 	number  int
-	winners []int
+	winners map[int]struct{}
 	input   []int
 }
 
@@ -32,11 +31,11 @@ func parseInput(input string) []card {
 	for scanner.Scan() {
 		s1 := strings.Split(scanner.Text(), ":")
 		cardID, _ := strconv.Atoi(strings.Fields(s1[0])[1])
-		c := card{number: cardID}
+		c := card{number: cardID, winners: make(map[int]struct{})}
 		s2 := strings.Split(s1[1], "|")
 		for _, i := range strings.Fields(s2[0]) {
 			n, _ := strconv.Atoi(i)
-			c.winners = append(c.winners, n)
+			c.winners[n] = struct{}{}
 		}
 		for _, i := range strings.Fields(s2[1]) {
 			n, _ := strconv.Atoi(i)
@@ -67,14 +66,12 @@ func part2(cards []card) int {
 		copies[i] = 1
 	}
 	for i, c := range cards {
-		for l := 0; l < copies[i]; l++ {
-			n := numWinners(c)
-			if n == 0 {
-				continue
-			}
-			for j := i + 1; j < i+n+1; j++ {
-				copies[j]++
-			}
+		n := numWinners(c)
+		if n == 0 {
+			continue
+		}
+		for j := i + 1; j < i+n+1; j++ {
+			copies[j] += copies[i]
 		}
 	}
 	for _, c := range copies {
@@ -86,13 +83,9 @@ func part2(cards []card) int {
 func numWinners(c card) int {
 	i := 0
 	for _, n := range c.input {
-		if isWinner(c.winners, n) {
+		if _, ok := c.winners[n]; ok {
 			i++
 		}
 	}
 	return i
-}
-
-func isWinner(winners []int, x int) bool {
-	return slices.Contains(winners, x)
 }
