@@ -13,7 +13,7 @@ func HandleInput() string {
 }
 
 // InputFile is a helper flag that automatically parses a
-// file name into the InputFile variable
+// file flag [-inputFile value] into the InputFile variable
 type InputFile string
 
 func (i *InputFile) String() string {
